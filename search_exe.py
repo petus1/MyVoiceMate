@@ -1,6 +1,7 @@
 import os
 import fnmatch
 
+
 def find_exe_files(start_dir, output_file):
     exe_files = []
 
@@ -17,6 +18,7 @@ def find_exe_files(start_dir, output_file):
             f.write(file + '\n')
 
     print(f"Найдено {len(exe_files)} .exe файлов. Результаты сохранены в '{output_file}'.")
+
 
 # Укажите директорию для поиска и имя выходного файла
 start_directory = "C:\\"  # Замените на нужный путь
