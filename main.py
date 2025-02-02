@@ -81,7 +81,7 @@ def main():
                 if rec.AcceptWaveform(data):
                     # print(rec.Result()[4:-2])
                     result = rec.FinalResult()
-                    command_handler(json.loads(result)["text"])
+                    command_handler(json.loads(result)["text"])  # обработка голоса с помощью the_commands_handler
 
                 else:
                     print(rec.PartialResult()[4:-2])
