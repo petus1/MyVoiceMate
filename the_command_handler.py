@@ -1,6 +1,7 @@
 from functions import *
 
 
+# обработчик голосовых команд
 def command_handler(command):
     if command != "":
 
