@@ -20,7 +20,7 @@ def command_handler(command):
         elif "как дела" in command:
             speak("У меня все хорошо, спасибо! А у тебя?")
 
-        elif "выключение питания" in command:
+        elif "выключение питания" in command or "выключении питания" in command:
             speak("До свидания!")
             quit()  # Выход из программы
 
