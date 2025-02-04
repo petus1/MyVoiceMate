@@ -45,10 +45,10 @@ def command_handler(command):
         elif "расскажи шутку" in command or "скажи шутку" in command:
             play("joke")
 
-        elif "следующая" in command or "следующее" in command:
+        elif "следующая" in command or "следующее" in command or "следующая песня" in command or "следующая музыка" in command:
             keyboard.send("next track")  # следующий трек
 
-        elif "предыдущая" in command:
+        elif "предыдущая" in command or "предыдущая песня" in command or "предыдущая музыка" in command:
             keyboard.send("previous track")  # предыдущий трек
 
         elif "пауза" in command or "стоп" in command or "воспроизведение" in command or "продолжай" in command:
