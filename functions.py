@@ -1,14 +1,14 @@
-import speech_recognition as sr
-import pyttsx3
+import speech_recognition as sr  # Распознавание речи online
+import pyttsx3  # Синтез речи
 
-import webbrowser
+import webbrowser  # Открытие вкладок браузера
 import datetime
-import subprocess
+import subprocess  # Запуск новых процессов
 from pygame import mixer
 import requests
 import keyboard
-import random
-import json
+import random  # Генератор случайных чисел
+import json  # Работа с данными в формате JSON
 
 engine = pyttsx3.init()
 mixer.init()
