@@ -15,6 +15,7 @@ mixer.init()
 
 appid = "b8674996d882d71cf243358cf5634257"
 
+weather_type = json.loads(open('weather_type.json', encoding="UTF-8").read())
 commands = json.loads(open('commands.json', encoding="UTF-8").read())
 numbers = json.loads(open('numbers.json', encoding="UTF-8").read())
 
@@ -130,7 +131,7 @@ def weather(city: str):
         temperature = data['main']['temp']
         weather_description = data['weather'][0]['description']
         print(f'Погода в городе {city}: {temperature}°C, {weather_description}.')
-        speak(f'Погода в городе {city}: {round(temperature)}° по цельсию, {weather_description}.')
+        speak(f'Погода в городе {city}: {round(temperature)}° по цельсию, {weather_type[weather_description]}.')
     else:
         speak('Город не найден или произошла ошибка.')
 
