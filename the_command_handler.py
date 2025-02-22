@@ -1,4 +1,4 @@
-from functions import *
+from functions import *  # Импорт всех функций ГА
 
 
 # обработчик голосовых команд
@@ -23,9 +23,6 @@ def command_handler(command):
         elif "выключение питания" in command or "выключении питания" in command:
             speak("До свидания!")
             quit()  # Выход из программы
-
-        elif "нормально" in command:
-            speak("Что случилось?")
 
         elif "хорошо" in command:
             speak("Ну это хорошо")

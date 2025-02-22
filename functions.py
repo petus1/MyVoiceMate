@@ -2,11 +2,12 @@ import speech_recognition as sr  # Распознавание речи online
 import pyttsx3  # Синтез речи
 
 import webbrowser  # Открытие вкладок браузера
-import datetime
+import datetime  # Работа со временем
 import subprocess  # Запуск новых процессов
-from pygame import mixer
-import requests
-import keyboard
+from pygame import mixer  # Воспроизведение записей
+import traceback  # Формирование информации об исключениях
+import requests  # Запросы на сайты
+import keyboard  # Нажатие клавиш с помощью функций
 import random  # Генератор случайных чисел
 import json  # Работа с данными в формате JSON
 
@@ -95,8 +96,8 @@ def open_website(url: str):
 
 def tell_time():
     """Говорит время."""
-    now = datetime.datetime.now()
-    current_time = now.strftime("%H:%M:%S")
+    time_now = datetime.datetime.now()
+    current_time = time_now.strftime("%H:%M:%S")
     speak(f"Сейчас {current_time}")
 
 
@@ -125,15 +126,24 @@ def weather(city: str):
     """Говорит погоду по городу."""
     url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={appid}&units=metric'
 
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        temperature = data['main']['temp']
-        weather_description = data['weather'][0]['description']
-        print(f'Погода в городе {city}: {temperature}°C, {weather_description}.')
-        speak(f'Погода в городе {city}: {round(temperature)}° по цельсию, {weather_type[weather_description]}.')
-    else:
-        speak('Город не найден или произошла ошибка.')
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            temperature = data['main']['temp']
+            weather_description = data['weather'][0]['description']
+            wind_speed = data['wind']['speed']
+            pressure = int(data['main']['pressure'] / 1.333)  # Из гПА в мм рт.ст.
+            print(f'Погода в городе {city.title()}: {temperature}°C, {weather_description}.')
+            speak(f'''Погода в городе {city}: {round(temperature)}° по Цельсию, {weather_type[weather_description]}.
+            Скорость ветра составляет {str(wind_speed)} метров в секунду.
+            Давление {str(pressure)} миллиметров ртутного столба''')
+        else:
+            speak(f'Город {city} не найден')
+    except:
+        speak(
+            "Произошла ошибка работы модуля \"Погода\". Подробности в терминале. Возможно вы не подключены к интернету")
+        traceback.print_exc()
 
 
 def open_app(app_name: str):
@@ -167,6 +177,7 @@ def volume_up(quantity: str):
 def volume_mute():
     """Выключает и включает звук."""
     keyboard.send("volume mute")
+
 
 # def brightness_down(quantity):
 #     for key, val in numbers.items():

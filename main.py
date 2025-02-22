@@ -1,5 +1,4 @@
-# обработчик команд по голосу
-from the_command_handler import *
+from the_command_handler import *  # Импорт обработчика команд
 
 import argparse
 import queue
