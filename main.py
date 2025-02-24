@@ -95,5 +95,7 @@ def main():
 
 
 if __name__ == "__main__":
+    model = Model(lang="ru")
+    recognize_offline(model)
     speak("Голосовой ассистент запущен!")
     main()

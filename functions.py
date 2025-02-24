@@ -89,7 +89,7 @@ def play(phrase: str):
 def open_website(url: str):
     """Открывает заготовленные вебсайты."""
     webbrowser.open(url)
-    speak(f"Открываю {url.split("/")[2]}")
+    speak(f"Открываю {url.split('/')[2]}")
 
 
 def tell_time():
