@@ -1,4 +1,3 @@
-import speech_recognition as sr  # Распознавание речи online
 import pyttsx3  # Синтез речи
 
 import webbrowser  # Открытие вкладок браузера
@@ -19,6 +18,8 @@ appid = "b8674996d882d71cf243358cf5634257"
 weather_type = json.loads(open('weather_type.json', encoding="UTF-8").read())
 commands = json.loads(open('commands.json', encoding="UTF-8").read())
 numbers = json.loads(open('numbers.json', encoding="UTF-8").read())
+
+config = {}
 
 apps = {
     "блокнот": "C:\\Windows\\System32\\notepad.exe",
@@ -41,23 +42,20 @@ def speak(text: str):
     engine.runAndWait()
 
 
-def listen():
-    """Слушает речь. Прошлая библиотека"""
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        recognizer.adjust_for_ambient_noise(source)
-        audio = recognizer.listen(source)
+def load_config():
+    """Загружает настройки ассистента."""
+    global config
     try:
-        command = recognizer.recognize_google(audio, language="ru-RU")
-        print(f"You said: {command}")
-        return command
-    except sr.UnknownValueError:
-        print("Sorry, I did not understand that.")
-        return None
-    except sr.RequestError:
-        print("Could not request results; check your network connection.")
-        return None
+        with open("config.json", "r", encoding="utf-8") as file:
+            config = json.load(file)
+    except FileNotFoundError:
+        config = {"user_name": "Пользователь", "assistant_name": "Ассистент"}
+
+
+def save_config():
+    """Сохраняет текущие настройки в файл."""
+    with open("config.json", "w", encoding="utf-8") as file:
+        json.dump(config, file, ensure_ascii=False, indent=4)
 
 
 def play(phrase: str):
@@ -193,3 +191,6 @@ def volume_mute():
 #             quantity = int(key)
 #     for _ in range(round(quantity / 10)):
 #         keyboard.send("brightness up")
+
+# Загружаем конфиг при старте
+load_config()

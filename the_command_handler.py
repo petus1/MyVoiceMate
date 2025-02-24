@@ -3,12 +3,25 @@ from functions import *  # Импорт всех функций ГА
 
 # обработчик голосовых команд
 def command_handler(command):
-    if command != "":
+    if command:
+        if config["assistant_name"].lower() in command:
+            speak(f"Слушаю вас, {config['user_name']}.")
 
-        if command == "джарвис":
-            play("greet")
+        elif "зови меня теперь" in command:
+            new_name = command.replace("зови меня теперь", "").strip()
+            config["user_name"] = new_name
+            save_config()
+            load_config()  # Перезагружаем настройки
+            speak(f"Теперь я буду обращаться к вам, {new_name}.")
 
-        if "привет" in command:
+        elif "измени имя ассистента" in command:
+            new_assistant_name = command.replace("измени имя ассистента на", "").strip()
+            config["assistant_name"] = new_assistant_name
+            save_config()
+            load_config()  # Перезагружаем настройки
+            speak(f"Теперь меня зовут {new_assistant_name}.")
+
+        elif "привет" in command:
             speak("Привет! Как дела?")
 
         elif "спасибо" in command or "ты молодец" in command:
