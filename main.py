@@ -95,7 +95,6 @@ def main():
 
 
 if __name__ == "__main__":
-    model = Model(lang="ru")
-    recognize_offline(model)
+    model = Model(lang="ru")  # куда скачивается C:\Users\pyotr\.cache\vosk
     speak("Голосовой ассистент запущен!")
     main()
