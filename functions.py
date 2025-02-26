@@ -156,20 +156,26 @@ def open_app(app_name: str):
 
 def volume_down(quantity: str):
     """Уменьшает громкость на какое-то значение."""
-    for key, val in numbers.items():
-        if val == quantity:
-            quantity = int(key)
-    for _ in range(round(quantity / 2)):
-        keyboard.send("volume down")
+    try:
+        for key, val in numbers.items():
+            if val == quantity:
+                quantity = int(key)
+        for _ in range(round(quantity / 2)):
+            keyboard.send("volume down")
+    except TypeError as e:
+        speak(f"Ошибка {e}. Повторите пожалуйста попытку")
 
 
 def volume_up(quantity: str):
     """Увеличивает громкость на какое-то значение."""
-    for key, val in numbers.items():
-        if val == quantity:
-            quantity = int(key)
-    for _ in range(round(quantity / 2)):
-        keyboard.send("volume up")
+    try:
+        for key, val in numbers.items():
+            if val == quantity:
+                quantity = int(key)
+        for _ in range(round(quantity / 2)):
+            keyboard.send("volume up")
+    except TypeError as e:
+        speak(f"Ошибка {e}. Повторите пожалуйста попытку")
 
 
 def volume_mute():
