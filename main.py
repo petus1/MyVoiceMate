@@ -12,6 +12,27 @@ import queue  # Очередь для обработки потоков
 q = queue.Queue()
 
 
+# Класс ассистента
+class Bot:
+    bot_name_ru = ""
+    bot_name_en = ""
+    city = ""
+    language = ""
+
+
+# Приветственное сообщение при запуске программы
+def greetings():
+    hour = int(datetime.datetime.now().hour)
+    if 0 <= hour < 6:
+        speak(f"Доброй ночи! Я - {my_voice_mate.bot_name_ru}, твой голосовой помощник. Чем могу помочь?")
+    elif 6 <= hour < 12:
+        speak(f"Доброе утро! Я - {my_voice_mate.bot_name_ru}, твой голосовой помощник. Чем могу помочь?")
+    elif 12 <= hour < 18:
+        speak(f"Добрый день! Я - {my_voice_mate.bot_name_ru}, твой голосовой помощник. Чем могу помочь?")
+    else:
+        speak(f"Добрый вечер! Я - {my_voice_mate.bot_name_ru}, твой голосовой помощник. Чем могу помочь?")
+
+
 def int_or_str(text):
     """Helper function for argument parsing."""
     try:
@@ -95,6 +116,15 @@ def main():
 
 
 if __name__ == "__main__":
+    # Модель для offline распознавания
     model = Model(lang="ru")  # куда скачивается C:\Users\pyotr\.cache\vosk
-    speak("Голосовой ассистент запущен!")
+
+    # Персонализация бота
+    my_voice_mate = Bot()
+    my_voice_mate.bot_name_ru = "Петус"
+    my_voice_mate.bot_name_en = "Petus"
+    my_voice_mate.city = "Москва"
+    my_voice_mate.language = "ru"
+
+    greetings()
     main()
