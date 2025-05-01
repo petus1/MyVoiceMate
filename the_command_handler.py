@@ -87,10 +87,17 @@ def command_handler(command):
             open_app("яндекс музыка")
             # open_website("https://music.youtube.com/watch?playlist=LM")
 
-        elif "найди" in command or "найти" in command:
-            query = command.replace("найди", "").strip()
-            query = query.replace("найти", "").strip()
-            search_web(query)
+        elif "найди в яндексе" in command or "найти в яндексе" in command or "найди в интернете" in command or "найти в интернете" in command:
+            query = command.replace("найди в яндексе", "").strip()
+            query = query.replace("найти в яндексе", "").strip()
+            query = command.replace("найди в интернете", "").strip()
+            query = query.replace("найти в интернете", "").strip()
+            search_yandex(query)
+
+        elif "найди в гугле" in command or "найти в гугле" in command:
+            query = command.replace("найди в гугле", "").strip()
+            query = query.replace("найти в гугле", "").strip()
+            search_google(query)
 
         elif "стоп" in command or "хватит" in command:
             speak("Выход из режима ожидания.")
@@ -109,12 +116,11 @@ def command_handler(command):
         elif "отключи громкость" in command or "включи громкость" in command or "выключи звук" in command:
             volume_mute()
 
-        # elif "понизь яркость на" in command or "убавь яркость на" in command or "уменьши яркость на" in command:
-        #     quantity = command.replace("понизь яркость на", "").strip()
-        #     quantity = quantity.replace("убавь яркость на", "").strip()
-        #     quantity = quantity.replace("уменьши яркость на", "").strip()
-        #     brightness_down(quantity)
-        # elif "повысь яркость на" in command or "увеличь яркость на" in command:
-        #     quantity = command.replace("повысь яркость на", "").strip()
-        #     quantity = quantity.replace("увеличь яркость на", "").strip()
-        #     brightness_up(quantity)
+        elif "найди на ютубе" in command or "найди на ютуб" in command:
+            query = command.replace("найди на ютубе", "").strip()
+            query = query.replace("найди на ютуб", "").strip()
+            search_youtube(query)
+
+        # elif "переведи на английский" in command:
+        #     text = command.replace("переведи на английский", "")
+        #     translate(text)

@@ -6,6 +6,7 @@ import subprocess  # Запуск новых процессов
 from pygame import mixer  # Воспроизведение записей
 import traceback  # Формирование информации об исключениях
 import requests  # Запросы на сайты
+from googletrans import Translator  # Доступ к API Google Translate
 import keyboard  # Нажатие клавиш с помощью функций
 import random  # Генератор случайных чисел
 import json  # Работа с данными в формате JSON
@@ -13,7 +14,7 @@ import json  # Работа с данными в формате JSON
 engine = pyttsx3.init()
 mixer.init()
 
-appid = "b8674996d882d71cf243358cf5634257"
+appid = "b8674996d882d71cf243358cf5634257"  # API-ключ для погоды
 
 weather_type = json.loads(open('weather_type.json', encoding="UTF-8").read())
 commands = json.loads(open('commands.json', encoding="UTF-8").read())
@@ -24,6 +25,8 @@ config = {}
 apps = {
     "блокнот": "C:\\Windows\\System32\\notepad.exe",
     "калькулятор": "C:\\Windows\\System32\\calc.exe",
+    "excel": "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
+    # "редактор реестра": "C:\\Windows\\regedit.exe",  Требует больше разрешений
     "проводник": "C:\\Windows\\explorer.exe",
     "steam": "C:\\Program Files (x86)\\Steam\\steam.exe",
     "obsidian": "C:\\Users\\pyotr\\AppData\\Local\\Programs\\obsidian\\obsidian.exe",
@@ -36,6 +39,16 @@ apps = {
 }
 
 
+# Дополнительные функции
+def is_integer(input_is_number: str) -> bool:
+    try:
+        float(input_is_number)  # Попробуем преобразовать строку в число с плавающей запятой
+        return True
+    except ValueError:
+        return False
+
+
+# Основные функции
 def speak(text: str):
     """Говорит слова"""
     engine.say(text)
@@ -92,6 +105,7 @@ def open_website(url: str):
     speak(f"Открываю {url.split('/')[2]}")
 
 
+# Время
 def tell_time():
     """Говорит время."""
     time_now = datetime.datetime.now()
@@ -113,13 +127,32 @@ def close_app():
     keyboard.send("alt+f4")
 
 
-def search_web(query: str):
-    """Ищет в браузере."""
-    url = f"https://www.google.com/search?q={query}"
-    webbrowser.open(url)
-    speak(f"Ищу {query} в Google")
+# Открытие веб-сайта поиска
+# Поиск в Google
+def search_google(query: str):
+    """Ищет в гугле."""
+    try:
+        url = f"https://www.google.com/search?q={query}"
+        webbrowser.open(url)
+        speak(f"Ищу {query} в Google")
+    except:
+        speak("Произошла ошибка работы модуля \"Открыть website\". Подробности ошибки выведены в терминал")
+        traceback.print_exc()
 
 
+# Поиск в Яндексе
+def search_yandex(query: str):
+    """Ищет в яндексе."""
+    try:
+        url = "https://ya.ru/search?text=" + query
+        webbrowser.open(url)
+        speak(f"Вот что мне удалось найти в Яндексе по запросу \"{query}\"")
+    except:
+        speak("Произошла ошибка работы модуля \"Поиск в Яндексе\". Подробности ошибки выведены в терминал")
+        traceback.print_exc()
+
+
+# Погода
 def weather(city: str):
     """Говорит погоду по городу."""
     url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={appid}&units=metric'
@@ -144,24 +177,32 @@ def weather(city: str):
         traceback.print_exc()
 
 
+# Запуск приложения
 def open_app(app_name: str):
     """Открывает приложения по названию."""
-    app_name = app_name.lower()
-    if app_name in apps:
-        subprocess.Popen([apps[app_name]])
-        speak(f"Открываю {app_name}")
-    else:
-        speak(f"Извините, я не знаю, как открыть {app_name}")
+    try:
+        app_name = app_name.lower()
+        if app_name in apps:
+            subprocess.Popen([apps[app_name]])
+            speak(f"Открываю {app_name}")
+        else:
+            speak(f"Извините, я не знаю, как открыть {app_name}")
+    except:
+        traceback.print_exc()
 
 
 def volume_down(quantity: str):
     """Уменьшает громкость на какое-то значение."""
     try:
-        for key, val in numbers.items():
-            if val == quantity:
-                quantity = int(key)
-        for _ in range(round(quantity / 2)):
-            keyboard.send("volume down")
+        if is_integer(quantity):
+            for _ in range(round(int(quantity) / 2)):
+                keyboard.send("volume down")
+        else:
+            for key, val in numbers.items():
+                if val == quantity:
+                    quantity = int(key)
+            for _ in range(round(quantity / 2)):
+                keyboard.send("volume down")
     except TypeError as e:
         speak(f"Ошибка {e}. Повторите пожалуйста попытку")
 
@@ -169,11 +210,15 @@ def volume_down(quantity: str):
 def volume_up(quantity: str):
     """Увеличивает громкость на какое-то значение."""
     try:
-        for key, val in numbers.items():
-            if val == quantity:
-                quantity = int(key)
-        for _ in range(round(quantity / 2)):
-            keyboard.send("volume up")
+        if is_integer(quantity):
+            for _ in range(round(int(quantity) / 2)):
+                keyboard.send("volume up")
+        else:
+            for key, val in numbers.items():
+                if val == quantity:
+                    quantity = int(key)
+            for _ in range(round(quantity / 2)):
+                keyboard.send("volume up")
     except TypeError as e:
         speak(f"Ошибка {e}. Повторите пожалуйста попытку")
 
@@ -181,6 +226,35 @@ def volume_up(quantity: str):
 def volume_mute():
     """Выключает и включает звук."""
     keyboard.send("volume mute")
+
+
+# Поиск по YouTube
+def search_youtube(query):
+    speak("Произвожу поиск на YouTube")
+    try:
+        url = "https://www.youtube.com/results?search_query=" + query
+        webbrowser.open(url)
+        speak(f"Вот что мне удалось найти на YouTube по запросу \"{query}\"")
+    except:
+        speak("Произошла ошибка работы модуля \"Поиск на YouTube\". Подробности ошибки выведены в терминал")
+        traceback.print_exc()
+
+
+# def translate(text: str, target_language: str = "en") -> str:
+#     """
+#     Перевод текста с одного языка на другой с использованием API Google Translate.
+#
+#     :param text: Текст для перевода.
+#     :param target_language: Язык перевода (по умолчанию - английский).
+#     :return: Переведённый текст.
+#     """
+#     try:
+#         translator = Translator()
+#         translated = translator.translate(text, dest=target_language)
+#         speak(f"Перевод звучит так: {translated.text}")
+#     except Exception as e:
+#         speak("Ошибка модуля переводчик.")
+#         return f"Ошибка перевода: {e}"
 
 
 # def brightness_down(quantity):
