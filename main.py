@@ -1,4 +1,5 @@
 from the_command_handler import *  # Импорт обработчика команд и функций
+from logger import logger
 
 import speech_recognition as sr  # Распознавание речи online
 from vosk import Model, KaldiRecognizer  # Распознавание речи offline
@@ -7,6 +8,7 @@ import argparse  # Парсинг аргументов командной стр
 import sys  # Системные функции и обработка ошибок
 import sounddevice as sd  # Работа с аудиоустройствами
 import queue  # Очередь для обработки потоков
+import json
 
 # Очередь для обработки аудиопотока
 q = queue.Queue()
@@ -82,7 +84,9 @@ def recognize_offline(model: Model) -> str:
             data = q.get()
             if recognizer.AcceptWaveform(data):  # Завершение обработки при полном распознавании
                 result = json.loads(recognizer.Result())
-                return result.get("text", "")
+                text = result.get("text", "")
+                if text:
+                    return text
 
 
 def listen() -> str:
@@ -104,20 +108,23 @@ def main():
 
     try:
         model = Model(lang=args.model)
+        logger.info("Голосовой ассистент запущен и готов к работе")
         while True:
             command = listen()
             if command:
                 print(f"Вы сказали: {command}")
                 command_handler(command.lower())  # Обработка распознанной команды
     except KeyboardInterrupt:
+        logger.info("Пользователь прервал работу ассистента")
         print("\nВыход...")
     except Exception as e:
+        logger.error(f"Критическая ошибка в main: {e}")
         print(f"Ошибка: {e}")
 
 
 if __name__ == "__main__":
     # Модель для offline распознавания
-    model = Model(lang="ru")  # куда скачивается C:\Users\pyotr\.cache\vosk
+    model = Model(lang="ru")  # куда скачивается C:\Users\<USER>\.cache\vosk
 
     # Персонализация бота
     my_voice_mate = Bot()
